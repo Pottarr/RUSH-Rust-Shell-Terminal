@@ -2,77 +2,77 @@ use std::ops::Deref;
 use std::sync::Arc;
 
 use iced::widget::text_editor::{Action, Edit, Motion};
-use iced::widget::{column, row, text, text_editor};
-use iced::Element;
+use iced::widget::{column, row, text, text_input};
+use iced::{Element, Task};
 
 fn main() -> Result<(), iced::Error> {
-    iced::application("RUSH Terminal", Terminal::update, Terminal::view).run()
+    iced::application("RUSH Terminal", Terminal::update, Terminal::view).run_with(Terminal::new)
 }
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 struct Terminal {
-    content: text_editor::Content,
+    content: String,
     history: Vec<String>,
     command: Vec<String>,
-    prompts: Vec<String>
+    current_path: String,
+    lines: i32
 }
 
 #[derive(Debug, Clone)]
 enum Message {
-    Edit(text_editor::Action),
+    Edit(String),
+    Submit(String)
 }
 
 impl Terminal {
+
+    fn new() -> (Self, Task<Message>) {
+        (
+            Self {
+                content: String::new(),
+                history: vec!["".to_string()],
+                command: Vec::new(),
+                current_path: "home".to_string(),
+                lines: 1
+            },
+            text_input::focus(text_input::Id::new("terminal_input"))
+        )
+    }
+
     fn update(&mut self, message: Message) {
         match message {
-            Message::Edit(action) => {
-                match action {
-                    Action::Edit(Edit::Enter) => {
-                        self.history.push(self.content.line(self.content.line_count() - 1).unwrap().deref().to_string());
-                        if self.content.line(self.content.line_count() - 1).unwrap().len() == 0 {
-                            self.command = vec!["".to_string()]
-                        } else {
-                            self.command = self.content.line(self.content.line_count() - 1).unwrap().split_terminator(' ').map(|v| v.to_string()).collect::<Vec<String>>();
+            Message::Edit(content) => {
+                self.content = content
+            }
+            Message::Submit(content) => {
+                if content.len() != 0 {
+                    self.history.push(content.clone());
+                    self.command = content.split_terminator(' ').map(|t| t.to_string()).collect();
+                    match self.command[0].as_str() {
+                        "shout" => {
+                            println!("{}", self.command[1..].join(" "))
                         }
-                        self.content.perform(action);
-                        match self.command[0].as_str() {
-                            "shout" => {
-                                self.content.perform(Action::Edit(Edit::Paste(Arc::new(format!("{}\n", self.command[1..].join(" "))))));
-                                self.prompts.push("".to_string())
-                            }
-                            _ => {}
-                        }
-                        self.prompts.push(">".to_string())
+                        _ => println!("Invalid command")
                     }
-                    Action::Edit(Edit::Backspace) => {
-                        if self.content.line(self.content.line_count() - 1).unwrap().len() != 0 {
-                            self.content.perform(action);
-                        }
-                    }
-                    Action::Move(motion) => {
-                        match motion {
-                            Motion::Up | Motion::Down => {}
-                            _ => self.content.perform(action)
-                        }
-                    }
-                    _ => self.content.perform(action)
                 }
+                self.lines += 1
             }
         }
     }
 
     fn view(&self) -> Element<Message> {
-        row![
-            column![
-                text(">").size(32), 
-                column((self.prompts.iter()).map(|t| text(t.to_string()).size(32).into()))
-            ],
-            text_editor(&self.content)
-            .size(32)
-            .on_action(Message::Edit)
-        ]
-        .spacing(5)
+        column((0..self.lines)
+            .map(
+                |i| row![
+                    text(">")
+                    .size(32), 
+                    text_input("", &self.history[i as usize])
+                    .on_input(Message::Edit)
+                    .on_submit(Message::Submit(self.content.clone()))
+                    .id("terminal_input")
+                ].into()
+            )
+        )
         .into()
     }
 }
-
