@@ -3,11 +3,12 @@ use std::sync::Arc;
 
 use iced::widget::text_editor::{Action, Edit, Motion};
 use iced::widget::{column, pick_list, row, scrollable, text, text_editor, text_input};
-use iced::{Element, Task, Theme};
+use iced::{event, window, Element, Event, Subscription, Task, Theme};
 
-fn main() -> Result<(), iced::Error> {
+fn main() -> iced::Result {
     iced::application("RUSH Terminal", Terminal::update, Terminal::view)
     .theme(Terminal::theme)
+    .subscription(Terminal::subscription)
     .run_with(Terminal::new)
 }
 
@@ -25,7 +26,8 @@ struct Terminal {
 enum Message {
     Edit(String),
     Submit(String),
-    ChangeTheme(Theme)
+    ChangeTheme(Theme),
+    ViewHistory(Event)
 }
 
 impl Terminal {
@@ -43,10 +45,11 @@ impl Terminal {
         )
     }
 
-    fn update(&mut self, message: Message) {
+    fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::Edit(content) => {
-                self.content = content
+                self.content = content;
+                Task::none()
             }
             Message::Submit(content) => {
                 if content.trim().len() != 0 {
@@ -55,14 +58,23 @@ impl Terminal {
 
                     match self.command[0].as_str() {
                         "shout" => self.output.push(self.command[1..].join(" ")),
+                        "clr" => self.output = Vec::new(),
                         _ => self.output.push("Invalid command".to_string())
                     }
                 } else {
                     self.output.push("".to_string());
                 }
-                self.content = String::new()
+                self.content = String::new();
+                Task::none()
             }
-            Message::ChangeTheme(theme) => self.theme = theme
+            Message::ChangeTheme(theme) => {
+                self.theme = theme;
+                Task::none()
+            }
+            Message::ViewHistory(event) => {
+                println!("{:?}", event);
+                Task::none()
+            }
         }
     }
 
@@ -86,6 +98,10 @@ impl Terminal {
 
     fn theme(&self) -> Theme {
         self.theme.clone()
+    }
+
+    fn subscription(&self) -> Subscription<Message> {
+        event::listen().map(Message::ViewHistory)
     }
 }
 
