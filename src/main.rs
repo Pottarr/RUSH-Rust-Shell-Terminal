@@ -1,5 +1,7 @@
 use std::ops::Deref;
 use std::sync::Arc;
+use std::path::PathBuf;
+use home::home_dir;
 
 use iced::widget::text_editor::{Action, Edit, Motion};
 use iced::widget::{column, pick_list, row, scrollable, text, text_editor, text_input};
@@ -22,7 +24,7 @@ struct Terminal {
     history: Vec<String>,
     command: Vec<String>,
     output: Vec<String>,
-    current_path: String
+    current_path: PathBuf
 }
 
 #[derive(Debug, Clone)]
@@ -42,7 +44,7 @@ impl Terminal {
                 history: Vec::new(),
                 command: Vec::new(),
                 output: vec!["Welcome to RUSH!".to_string()],
-                current_path: "~".to_string()
+                current_path: home_dir().unwrap()
             },
             text_input::focus("input")
         )
@@ -58,15 +60,20 @@ impl Terminal {
                 if content.trim().len() != 0 {
                     self.history.push(content.clone());
                     self.command = content.trim().split_terminator(' ').map(|t| t.to_string()).collect();
+                    let mut final_output = format!("{}$ {}", self.current_path.to_str().unwrap(),content);
 
                     match self.command[0].as_str() {
-                        "shout" => self.shout(),
+                        "shout" => self.shout(&mut final_output),
                         "clr" => self.clr(),
-                        "cd" => self.cd(),
-                        _ => self.output.push("Invalid command".to_string())
+                        "cd" => self.cd(&mut final_output),
+                        _ => {
+                            final_output.push('\n');
+                            final_output.push_str("Invalid command");
+                            self.output.push(final_output.to_string())
+                        }
                     }
                 } else {
-                    self.output.push("".to_string());
+                    self.output.push("$".to_string());
                 }
                 self.content = String::new();
                 Task::none()
@@ -86,16 +93,17 @@ impl Terminal {
         column![
             row![text("Change theme:").size(20), pick_list(Theme::ALL, Some(&self.theme), Message::ChangeTheme)],
             row![
-                text(format!("user@rush {}$", self.current_path)).size(34),
+                text(format!("user@rush {}$", self.current_path.to_str().unwrap())).size(34),
                 text_input("", &self.content).size(30)
                 .on_input(Message::Edit)
                 .on_submit(Message::Submit(self.content.clone()))
                 .id("input")
-            ].width(1000),
+            ],
             scrollable(
-                column((0..self.output.len()).map(|i| text(format!("> {}", self.output[i].to_string())).size(26).into()))
+                column((0..self.output.len()).map(|i| text(format!("{}", self.output[i].to_string())).size(26).into()))
             ).width(1000)
         ]
+        .padding(4)
         .spacing(30)
         .into()
     }
