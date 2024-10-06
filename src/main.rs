@@ -5,6 +5,9 @@ use iced::widget::text_editor::{Action, Edit, Motion};
 use iced::widget::{column, pick_list, row, scrollable, text, text_editor, text_input};
 use iced::{event, window, Element, Event, Subscription, Task, Theme};
 
+mod commands;
+use commands::{shout};
+
 fn main() -> iced::Result {
     iced::application("RUSH Terminal", Terminal::update, Terminal::view)
     .theme(Terminal::theme)
@@ -57,8 +60,9 @@ impl Terminal {
                     self.command = content.trim().split_terminator(' ').map(|t| t.to_string()).collect();
 
                     match self.command[0].as_str() {
-                        "shout" => self.output.push(self.command[1..].join(" ")),
-                        "clr" => self.output = Vec::new(),
+                        "shout" => self.shout(),
+                        "clr" => self.clr(),
+                        "cd" => self.cd(),
                         _ => self.output.push("Invalid command".to_string())
                     }
                 } else {
