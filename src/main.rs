@@ -1,14 +1,10 @@
-use std::ops::Deref;
-use std::sync::Arc;
 use std::path::PathBuf;
 use home::home_dir;
 
-use iced::widget::text_editor::{Action, Edit, Motion};
-use iced::widget::{column, pick_list, row, scrollable, text, text_editor, text_input};
-use iced::{event, window, Element, Event, Subscription, Task, Theme};
+use iced::widget::{column, pick_list, row, scrollable, text, text_input};
+use iced::{event, Element, Event, Subscription, Task, Theme};
 
 mod commands;
-use commands::{shout};
 
 fn main() -> iced::Result {
     iced::application("RUSH Terminal", Terminal::update, Terminal::view)
@@ -60,12 +56,14 @@ impl Terminal {
                 if content.trim().len() != 0 {
                     self.history.push(content.clone());
                     self.command = content.trim().split_terminator(' ').map(|t| t.to_string()).collect();
-                    let mut final_output = format!("{}$ {}", self.current_path.to_str().unwrap(),content);
+                    let mut final_output = format!("{}$ {}", self.current_path.to_str().unwrap().replace(home_dir().unwrap().to_str().unwrap(), "~"),content);
 
                     match self.command[0].as_str() {
                         "shout" => self.shout(&mut final_output),
                         "clr" => self.clr(),
                         "cd" => self.cd(&mut final_output),
+                        "mkfile" => self.mkfile(&mut final_output),
+                        "mkdir" => self.mkdir(&mut final_output),
                         _ => {
                             final_output.push('\n');
                             final_output.push_str("Invalid command");
@@ -83,7 +81,7 @@ impl Terminal {
                 Task::none()
             }
             Message::ViewHistory(event) => {
-                println!("{:?}", event);
+                // println!("{:?}", event);
                 Task::none()
             }
         }
@@ -93,7 +91,7 @@ impl Terminal {
         column![
             row![text("Change theme:").size(20), pick_list(Theme::ALL, Some(&self.theme), Message::ChangeTheme)],
             row![
-                text(format!("user@rush {}$", self.current_path.to_str().unwrap())).size(34),
+                text(format!("user@rush {}$", self.current_path.to_str().unwrap().replace(home_dir().unwrap().to_str().unwrap(), "~"))).size(34),
                 text_input("", &self.content).size(30)
                 .on_input(Message::Edit)
                 .on_submit(Message::Submit(self.content.clone()))
