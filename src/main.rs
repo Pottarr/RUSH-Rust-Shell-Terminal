@@ -66,6 +66,7 @@ impl Terminal {
                         "shout" => self.shout(&mut final_output),
                         "clr" => self.clr(),
                         "cd" => self.cd(&mut final_output),
+                        "ls" => self.ls(&mut final_output),
                         _ => {
                             final_output.push('\n');
                             final_output.push_str("Invalid command");
