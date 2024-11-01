@@ -5,6 +5,7 @@ use iced::widget::{column, pick_list, row, scrollable, text, text_input};
 use iced::{event, Element, Event, Subscription, Task, Theme};
 
 mod commands;
+mod services;
 
 fn main() -> iced::Result {
     iced::application("RUSH Terminal", Terminal::update, Terminal::view)
@@ -20,7 +21,7 @@ struct Terminal {
     history: Vec<String>,
     command: Vec<String>,
     output: Vec<String>,
-    current_path: PathBuf
+    current_path: PathBuf,
 }
 
 #[derive(Debug, Clone)]
@@ -65,6 +66,7 @@ impl Terminal {
                         "ls" => self.ls(&mut final_output),
                         "mkfile" => self.mkfile(&mut final_output),
                         "mkdir" => self.mkdir(&mut final_output),
+                        "exit" => std::process::exit(0),
                         _ => {
                             final_output.push('\n');
                             final_output.push_str("Invalid command");
@@ -83,6 +85,7 @@ impl Terminal {
             }
             Message::ViewHistory(event) => {
                 // println!("{:?}", event);
+                self.history(event);
                 Task::none()
             }
         }
