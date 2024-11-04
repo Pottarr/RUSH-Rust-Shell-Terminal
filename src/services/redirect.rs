@@ -9,7 +9,7 @@ impl Terminal {
         match self.command[index_of_redirect..].len() {
             1 => {
                 final_output.push('\n');
-                final_output.push_str("No filename specified.");
+                final_output.push_str("Error: No filename specified.");
                 self.output.push(final_output.to_string());
             }
             2 => {
