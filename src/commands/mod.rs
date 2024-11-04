@@ -7,3 +7,4 @@ pub mod mkdir;
 pub mod log;
 pub mod meow;
 pub mod find;
+pub mod help;
