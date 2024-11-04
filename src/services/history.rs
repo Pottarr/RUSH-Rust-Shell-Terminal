@@ -194,6 +194,7 @@ impl Terminal {
                         }
                     }
                 }
+                self.current_command_position = self.history.len();
             }
             Err(e) => {
                 println!("Error at bruh2: {}", e);
