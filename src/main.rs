@@ -21,6 +21,7 @@ struct Terminal {
     history: Vec<String>,
     command: Vec<String>,
     output: Vec<String>,
+    current_command_position: usize,
     current_path: PathBuf,
 }
 
@@ -40,9 +41,11 @@ impl Terminal {
             history: Vec::new(),
             command: Vec::new(),
             output: vec!["Welcome to RUSH!".to_string()],
+            current_command_position: 0,
             current_path: home_dir().unwrap()
         };
         initial_setup.startup_sync_history();
+
         (
             initial_setup,
             text_input::focus("input")
