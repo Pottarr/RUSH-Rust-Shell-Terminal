@@ -5,6 +5,7 @@ use iced::widget::{column, pick_list, row, scrollable, text, text_input};
 use iced::{event, Element, Event, Subscription, Task, Theme};
 
 mod commands;
+mod services;
 
 fn main() -> iced::Result {
     iced::application("RUSH Terminal", Terminal::update, Terminal::view)
@@ -20,7 +21,8 @@ struct Terminal {
     history: Vec<String>,
     command: Vec<String>,
     output: Vec<String>,
-    current_path: PathBuf
+    current_command_position: usize,
+    current_path: PathBuf,
 }
 
 #[derive(Debug, Clone)]
@@ -33,15 +35,19 @@ enum Message {
 
 impl Terminal {
     fn new() -> (Self, Task<Message>) {
+        let mut initial_setup = Self {
+            theme: Theme::CatppuccinFrappe,
+            content: String::new(),
+            history: Vec::new(),
+            command: Vec::new(),
+            output: vec!["Welcome to RUSH!".to_string()],
+            current_command_position: 0,
+            current_path: home_dir().unwrap()
+        };
+        initial_setup.startup_sync_history();
+
         (
-            Self {
-                theme: Theme::CatppuccinFrappe,
-                content: String::new(),
-                history: Vec::new(),
-                command: Vec::new(),
-                output: vec!["Welcome to RUSH!".to_string()],
-                current_path: home_dir().unwrap()
-            },
+            initial_setup,
             text_input::focus("input")
         )
     }
@@ -53,8 +59,9 @@ impl Terminal {
                 Task::none()
             }
             Message::Submit(content) => {
-                if content.trim().len() != 0 {
-                    self.history.push(content.clone());
+                if &content.trim().len() != &0 {
+                    self.push_history(&content);
+                    // self.history.push(content.clone());
                     self.command = content.trim().split_terminator(' ').map(|t| t.to_string()).collect();
                     let mut final_output = format!("{}$ {}", self.current_path.to_str().unwrap().replace(home_dir().unwrap().to_str().unwrap(), "~"),content);
 
@@ -65,6 +72,10 @@ impl Terminal {
                         "ls" => self.ls(&mut final_output),
                         "mkfile" => self.mkfile(&mut final_output),
                         "mkdir" => self.mkdir(&mut final_output),
+                        "log" => self.log(&mut final_output),
+                        "meow" => self.meow(&mut final_output),
+                        "find" => self.find(&mut final_output),
+                        "exit" => process::exit(0),
                         _ => {
                             final_output.push('\n');
                             final_output.push_str("Invalid command");
@@ -83,6 +94,7 @@ impl Terminal {
             }
             Message::ViewHistory(event) => {
                 // println!("{:?}", event);
+                self.history(event);
                 Task::none()
             }
         }
