@@ -43,7 +43,7 @@ impl Terminal {
             command: Vec::new(),
             output: vec!["Welcome to RUSH!".to_string()],
             current_command_position: 0,
-            current_path: home_dir().unwrap()
+            current_path: home_dir().unwrap(),
         };
         initial_setup.startup_sync_history();
 
@@ -76,8 +76,8 @@ impl Terminal {
                         "log" => self.log(&mut final_output),
                         "meow" => self.meow(&mut final_output),
                         "find" => self.find(&mut final_output),
+                        "help" => self.help(&mut final_output),
                         "exit" => process::exit(0),
-
                         _ => {
                             final_output.push('\n');
                             final_output.push_str("Invalid command");
