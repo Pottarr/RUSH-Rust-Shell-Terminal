@@ -41,65 +41,8 @@ impl Terminal {
                 contents.clear();
             }
             if self.command.contains(&"|".to_string()) {
-                let index_of_pipe = self.command.iter().position(|x| x == "|").unwrap();
-                match self.command[index_of_pipe..].len() {
-                    1 => {
-                        final_output.push('\n');
-                        final_output.push_str("Error: pipe to nothing");
-                        self.output.push(final_output.to_string());
-                        } 
-                    2 => {
-                        match self.command[index_of_pipe+1].clone().as_str() {
-                            "find" => {
-                                final_output.push('\n');
-                                final_output.push_str("Please enter a phrase to find");
-                                self.output.push(final_output.to_string());
-                            }
-                            _ => {
-                                final_output.push('\n');
-                                final_output.push_str(format!("Can't pipe with command: {}", self.command[index_of_pipe+1].clone()).as_str());
-                                self.output.push(final_output.to_string());
-                            }
-                        }
-
-                    }
-                    3 => {
-                        let phrase = String::from(self.command[index_of_pipe + 2].clone());
-                        match self.command[index_of_pipe+1].clone().as_str() {
-                            "find" => {
-                                for file in &all_contents {
-                                    for line in file.1.split('\n') {
-                                        if line.contains(&phrase) {
-                                            final_output.push('\n');
-                                            final_output.push_str(format!("{}: {}", file.0, line).as_str());
-                                        }
-                                    }
-                                }
-                                self.output.push(final_output.to_string());
-                            }
-                            _ => {
-                                final_output.push('\n');
-                                final_output.push_str(format!("Can't pipe with command: {}", self.command[index_of_pipe+1].clone()).as_str());
-                                self.output.push(final_output.to_string());
-                            }
-                        }
-                    }
-                    _ => {
-                        match self.command[index_of_pipe+1].clone().as_str() {
-                            "find" => {
-                                final_output.push('\n');
-                                final_output.push_str("Too many number of phrase arguments to find");
-                                self.output.push(final_output.to_string());
-                            }
-                            _ => {
-                                final_output.push('\n');
-                                final_output.push_str(format!("Can't pipe with command: {}", self.command[index_of_pipe+1].clone()).as_str());
-                                self.output.push(final_output.to_string());
-                            }
-                        }
-
-                    }
-                }
+                self.piping_helper(final_output, &all_contents);
+                self.output.push(final_output.to_string());
             } else {
                 for file in &all_contents {
                     final_output.push('\n');
