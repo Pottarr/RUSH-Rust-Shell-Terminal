@@ -3,7 +3,7 @@ use crate::Terminal;
 impl Terminal {
     pub fn log(&mut self, final_output: &mut String) {
         if self.command.len() == 1 {
-            final_output.push_str("Please specify the option being logged");
+            final_output.push_str("\nPlease specify the option being logged");
         } else {
             match self.command[1..].join(" ").as_str() {
                 "-h" => {
@@ -15,7 +15,7 @@ impl Terminal {
                     }
                 }
                 _ => {
-                    final_output.push_str("Invalid arguments");
+                    final_output.push_str("\nInvalid arguments");
                 }
             }
         }
