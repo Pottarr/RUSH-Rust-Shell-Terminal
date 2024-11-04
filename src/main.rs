@@ -69,7 +69,7 @@ impl Terminal {
                         "ls" => self.ls(&mut final_output),
                         "mkfile" => self.mkfile(&mut final_output),
                         "mkdir" => self.mkdir(&mut final_output),
-                        // "log" => self.log(&mut final_output, &mut option),
+                        "log" => self.log(&mut final_output),
                         "exit" => std::process::exit(0),
                         _ => {
                             final_output.push('\n');
