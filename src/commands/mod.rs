@@ -5,3 +5,4 @@ pub mod ls;
 pub mod mkfile;
 pub mod mkdir;
 pub mod meow;
+pub mod find;
