@@ -73,6 +73,7 @@ impl Terminal {
     }
 
     pub fn history(&mut self, event: Event) {
+        self.sync_history();
         if let Event::Keyboard(keyboard_event) = event {
             match keyboard_event {
                 keyboard::Event::KeyPressed { key, .. } => match key {

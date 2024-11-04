@@ -7,6 +7,8 @@ impl Terminal {
         } else {
             match self.command[1..].join(" ").as_str() {
                 "-h" => {
+                    final_output.push_str("\n");
+                    final_output.push_str(format!("Command count in history: {}", self.history.len()).as_str());
                     for command in &self.history {
                         final_output.push_str("\n");
                         final_output.push_str(&command);
