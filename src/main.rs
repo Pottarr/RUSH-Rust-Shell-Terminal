@@ -1,5 +1,4 @@
 use std::path::PathBuf;
-use std::process;
 use home::home_dir;
 
 use iced::widget::{column, pick_list, row, scrollable, text, text_input};
@@ -66,9 +65,6 @@ impl Terminal {
                         "ls" => self.ls(&mut final_output),
                         "mkfile" => self.mkfile(&mut final_output),
                         "mkdir" => self.mkdir(&mut final_output),
-                        "meow" => self.meow(&mut final_output),
-                        "find" => self.find(&mut final_output),
-                        "exit" => process::exit(0),
                         _ => {
                             final_output.push('\n');
                             final_output.push_str("Invalid command");
@@ -119,3 +115,4 @@ impl Terminal {
         event::listen().map(Message::ViewHistory)
     }
 }
+
