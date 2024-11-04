@@ -12,8 +12,9 @@ impl Terminal {
         } else {
             let mut contents = String::new();
             for path in &self.command[1..] {
+                let mut file: File;
                 if Path::new(path).has_root() {
-                    let mut file = match File::open(Path::new(path)) {
+                    file = match File::open(Path::new(path)) {
                         Ok(f) => f,
                         Err(_) => {
                             final_output.push('\n');
@@ -21,9 +22,8 @@ impl Terminal {
                             continue
                         }
                     };
-                    file.read_to_string(&mut contents);
                 } else {
-                    let mut file = match File::open(Path::new(format!("{}/{path}", self.current_path.to_str().unwrap()).as_str())) {
+                    file = match File::open(Path::new(format!("{}/{path}", self.current_path.to_str().unwrap()).as_str())) {
                         Ok(f) => f,
                         Err(_) => {
                             final_output.push('\n');
@@ -31,8 +31,8 @@ impl Terminal {
                             continue
                         }
                     };
-                    file.read_to_string(&mut contents);
                 }
+                file.read_to_string(&mut contents);
             }
             final_output.push('\n');
             final_output.push_str(&contents);
