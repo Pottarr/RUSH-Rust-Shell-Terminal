@@ -4,6 +4,7 @@ use std::fs::File;
 use std::path::Path;
 
 impl Terminal {
+    // find phrase in a file, you can find phrase in multiple files using piping
     pub fn find(&mut self, final_output: &mut String) {
         if self.command.len() == 1 {
             final_output.push('\n');
