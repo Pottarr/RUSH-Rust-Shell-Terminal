@@ -51,8 +51,6 @@ impl Terminal {
                     "log" => {
                         final_output.push('\n');
                         final_output.push_str("log: Show command history\n");
-                        final_output.push_str("Usage: log <option>\n");
-                        final_output.push_str("Example: log -h\n");
                         self.output.push(final_output.to_string());
                     }
                     "ls" => {
