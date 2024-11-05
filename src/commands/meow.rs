@@ -45,7 +45,6 @@ impl Terminal {
             }
             if self.command.contains(&"|".to_string()) {
                 self.piping_helper(final_output, &all_contents);
-                self.output.push(final_output.to_string());
             } else {
                 for file in &all_contents {
                     final_output.push('\n');

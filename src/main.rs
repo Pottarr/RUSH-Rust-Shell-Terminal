@@ -3,7 +3,7 @@ use std::process;
 use home::home_dir;
 
 use iced::widget::{column, pick_list, row, scrollable, text, text_input};
-use iced::{event, Element, Event, Subscription, Task, Theme};
+use iced::{color, event, Element, Event, Subscription, Task, Theme};
 
 mod commands;
 mod services;
@@ -85,7 +85,7 @@ impl Terminal {
                         }
                     }
                 } else {
-                    self.output.push("$".to_string());
+                    self.output.push(format!("{}$", self.current_path.to_str().unwrap()));
                 }
                 self.content = String::new();
                 Task::none()
@@ -106,7 +106,7 @@ impl Terminal {
         column![
             row![text("Change theme:").size(20), pick_list(Theme::ALL, Some(&self.theme), Message::ChangeTheme)],
             row![
-                text(format!("user@rush {}$", self.current_path.to_str().unwrap().replace(home_dir().unwrap().to_str().unwrap(), "~"))).size(34),
+                text(format!("user@rush {}$", self.current_path.to_str().unwrap().replace(home_dir().unwrap().to_str().unwrap(), "~"))).size(34).color(color!(0x00e03c)),
                 text_input("", &self.content).size(30)
                 .on_input(Message::Edit)
                 .on_submit(Message::Submit(self.content.clone()))
