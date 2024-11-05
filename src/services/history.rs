@@ -35,13 +35,13 @@ impl Terminal {
                                         println!("Log File CREATED SUCCESSFULLY");
                                     }
                                     Err(e) => {
-                                        println!("Error at StaSynHis01: {}", e);
+                                        println!("Error at startup_sync_history00: {}", e);
                                     }
                                 }
                             }
                         },
                         Err(e) => {
-                            println!("Error at StaSynHis02: {}", e);
+                            println!("Error at startup_sync_history01: {}", e);
                         }
                     }
                 }
@@ -55,18 +55,18 @@ impl Terminal {
                                     println!("Log File CREATED SUCCESSFULLY");
                                 }
                                 Err(e) => {
-                                    println!("Error at StaSynHis03: {}", e);
+                                    println!("Error at startup_sync_history02: {}", e);
                                 }
                             }
                         }
                         Err(e) => {
-                            println!("Error at StaSynHis04: {}", e);
+                            println!("Error at startup_sync_history03: {}", e);
                         }
                     }
                 }
             },
             Err(e) => {
-                println!("Error at StaSynHis05: {}", e);
+                println!("Error at startup_sync_history04: {}", e);
                 process::exit(2);
             }
         }
@@ -116,7 +116,7 @@ impl Terminal {
                                             match writeln!(writer, "{}", latest_command) {
                                                 Ok(_) => {}
                                                 Err(e) => {
-                                                    println!("Error at SynHis01: {}", e);
+                                                    println!("Error at sync_history00: {}", e);
                                                     process::exit(2);
                                                 }
                                             }
@@ -124,7 +124,7 @@ impl Terminal {
                                         println!("Commands SYNCED");
                                     }
                                     Err(e) => {
-                                        println!("Error 011: {}", e);
+                                        println!("Error sync_history01: {}", e);
                                         // process::exit(2);
                                     }
                                 }
@@ -134,14 +134,14 @@ impl Terminal {
                                 match File::create(&history_file_str) {
                                     Ok(_) => println!("Log File CREATED SUCCESSFULLY"),
                                     Err(e) => {
-                                        println!("Error at 012: {}", e);
+                                        println!("Error at sync_history02: {}", e);
                                         process::exit(2);
                                     }
                                 }
                             }
                         },
                         Err(e) => {
-                            println!("Error at 013: {}", e);
+                            println!("Error at sync_history03: {}", e);
                             process::exit(2);
                         }
                     }
@@ -154,20 +154,20 @@ impl Terminal {
                             match File::create(&history_file_str) {
                                 Ok(_) => println!("Log File CREATED SUCCESSFULLY"),
                                 Err(e) => {
-                                    println!("Errorat 014: {}", e);
+                                    println!("Error at sync_history04: {}", e);
                                     process::exit(2);
                                 }
                             }
                         }
                         Err(e) => {
-                            println!("Error at 015: {}", e);
+                            println!("Error at sync_history05: {}", e);
                             process::exit(2);
                         }
                     }
                 }
             },
             Err(e) => {
-                println!("Error at 016: {}", e);
+                println!("Error at sync_history06: {}", e);
                 process::exit(2);
             }
         }
@@ -190,7 +190,7 @@ impl Terminal {
                             self.history.push(command);
                         }
                         Err(e) => {
-                            println!("Error at bruh1: {}", e);
+                            println!("Error at import_history00: {}", e);
                             process::exit(2);
                         }
                     }
@@ -198,7 +198,7 @@ impl Terminal {
                 self.current_command_position = self.history.len();
             }
             Err(e) => {
-                println!("Error at bruh2: {}", e);
+                println!("Error at import_history01: {}", e);
                 process::exit(2);
             }
         }

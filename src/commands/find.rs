@@ -1,6 +1,6 @@
 use crate::Terminal;
 use std::io::Read;
-use std::{fs::File, io::Write};
+use std::fs::File;
 use std::path::Path;
 
 impl Terminal {
@@ -38,7 +38,10 @@ impl Terminal {
                         }
                     };
                 }
-                file.read_to_string(&mut contents);
+                match file.read_to_string(&mut contents) {
+                    Ok(_) => println!("File read to string successfully"),
+                    Err(e) => println!("Error at File read to string: {}", e)
+                }
                 let temp: Vec<String> = contents.split('\n').map(|x| x.to_string()).collect();
                 for sentence in &temp {
                     if sentence.contains(&phrase) {

@@ -1,6 +1,6 @@
 use crate::Terminal;
 use std::io::Read;
-use std::{fs::File, io::Write};
+use std::fs::File;
 use std::path::Path;
 
 impl Terminal {
@@ -36,7 +36,10 @@ impl Terminal {
                         }
                     };
                 }
-                file.read_to_string(&mut contents);
+                match file.read_to_string(&mut contents) {
+                    Ok(_) => println!("File read to string successfully"),
+                    Err(e) => println!("Error at File read to string: {}", e)
+                }
                 all_contents.push((path.to_string(), contents.clone()));
                 contents.clear();
             }
