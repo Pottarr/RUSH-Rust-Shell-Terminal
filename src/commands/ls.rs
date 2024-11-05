@@ -43,15 +43,18 @@ impl Terminal {
     }
 
     fn get_file_name_as_string(&self, file_path_buf: PathBuf) -> String {
+        // get the metadata of current directory
         let metadata = fs::metadata(&file_path_buf).expect("Unable to read metadata");
         
         let prefix = self.current_path.to_str().unwrap();
         let mut result: String = String::new();
+        // if it is a directory
         if metadata.is_dir() {
             if let Some(path_str) = file_path_buf.to_str() {
                 if let Some(dir_name) = path_str.strip_prefix(prefix) {
 
                     let dir_name_string;
+                    // displays depending on the system, Windows uses \\, anyhing else is /
                     if cfg!(target_os = "windows") {
                         
                         dir_name_string = dir_name.to_owned() + "\\";
@@ -61,7 +64,7 @@ impl Terminal {
                         dir_name_string = dir_name.to_owned() + "/";
                         
                     }
-                    
+                    // format the output to have an equal spacing
                     if dir_name_string.len() <= 15 {
                         result = format!("{:.15}", dir_name_string);
                         result = format!("{:<30}", result)
@@ -76,10 +79,12 @@ impl Terminal {
                     }
                 }
             }
+        // if it is a file
         }else if metadata.is_file() {
             if let Some(path_str) = file_path_buf.to_str() {
                 if let Some(file_name) = path_str.strip_prefix(prefix) {
                     let file_name_string = file_name.to_string();
+                    // format the output to have an equal spacing
                     if file_name_string.len() <= 15 {
                         result = format!("{:.15}", file_name_string);
                         result = format!("{:<30}", result)

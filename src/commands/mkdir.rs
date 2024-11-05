@@ -3,12 +3,14 @@ use std::fs;
 use std::path::Path;
 
 impl Terminal {
+    // create a new directory
     pub fn mkdir(&mut self, final_output: &mut String) {
         if self.command.len() == 1 {
             final_output.push_str("Please enter a directory name to create");
         } else {
             let mut dir_count = 0;
             for path in &self.command[1..] {
+                // 2 types of path name
                 if Path::new(path).has_root() {
                     match fs::create_dir(path) {
                         Ok(()) => dir_count += 1,

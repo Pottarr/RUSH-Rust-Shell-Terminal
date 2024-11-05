@@ -1,6 +1,8 @@
 use crate::Terminal;
 
 impl Terminal {
+    // print the contents to the output
+    // shout can also use redirect
     pub fn shout(&mut self, final_output: &mut String) {
         let mut contents: String = String::new();
         final_output.push('\n');

@@ -1,6 +1,7 @@
 use crate::Terminal;
 
 impl Terminal {
+    // Print out help for all commands
     pub fn help(&mut self, final_output: &mut String) {
         match self.command.len() {
             1 => {

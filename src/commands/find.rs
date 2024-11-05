@@ -15,11 +15,12 @@ impl Terminal {
             final_output.push_str("Please enter a file name to find the phrase");
             self.output.push(final_output.to_string());
         } else {
-            let phrase = String::from(self.command[1].clone());
-            let mut words: Vec<String> = Vec::new();
-            let mut contents = String::new();
+            let phrase = String::from(self.command[1].clone());     
+            let mut words: Vec<String> = Vec::new();    // This will be used for final output, stores all occurence of the phrase
+            let mut contents = String::new();   // Store the whole file content
             for path in &self.command[2..] {
                 let mut file: File;
+                // if the filename has a root, use that as the path
                 if Path::new(path).has_root() {
                     file = match File::open(Path::new(path)) {
                         Ok(f) => f,
@@ -30,6 +31,7 @@ impl Terminal {
                         }
                     };
                 } else {
+                    // if no root, add a root into the path to prevent errors
                     file = match File::open(Path::new(format!("{}/{path}", self.current_path.to_str().unwrap()).as_str())) {
                         Ok(f) => f,
                         Err(_) => {
@@ -39,11 +41,15 @@ impl Terminal {
                         }
                     };
                 }
+                // Usually, the read_to_string method reads the file contents and stores in a String and returns Result
+                // but since our function doesn't need to return anything, we use a match case to handle a result
+                // and don't do anything about it
                 match file.read_to_string(&mut contents) {
                     Ok(_) => println!("File read to string successfully"),
                     Err(e) => println!("Error at File read to string: {}", e)
                 }
                 let temp: Vec<String> = contents.split('\n').map(|x| x.to_string()).collect();
+                // find the phrases in a contents String which we split on a newline char
                 for sentence in &temp {
                     if sentence.contains(&phrase) {
                         words.push(sentence.clone());
