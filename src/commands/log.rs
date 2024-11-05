@@ -2,6 +2,15 @@ use crate::Terminal;
 
 impl Terminal {
     pub fn log(&mut self, final_output: &mut String) {
+        final_output.push_str("\n");
+        final_output.push_str(format!("Command count in history: {}", self.history.len()).as_str());
+        for command in &self.history {
+            final_output.push_str("\n");
+            final_output.push_str(&command);
+        }
+
+        self.output.push(final_output.to_string());
+
         if self.command.len() == 1 {
             final_output.push_str("\nPlease specify the option being logged");
         } else {
@@ -9,12 +18,16 @@ impl Terminal {
             match self.command[1].as_str() {
                 "-h" => {
                     contents.push_str("\n");
-                    contents.push_str(format!("Command count in history: {}", self.history.len()).as_str());
+                    contents.push_str(
+                        format!("Command count in history: {}", self.history.len()).as_str(),
+                    );
                     for command in &self.history {
                         contents.push_str("\n");
                         contents.push_str(&command);
                     }
-                    if self.command.contains(&">".to_string()) || self.command.contains(&">>".to_string()) {
+                    if self.command.contains(&">".to_string())
+                        || self.command.contains(&">>".to_string())
+                    {
                         self.redirect_helper(final_output, contents);
                     } else {
                         final_output.push_str(&contents);

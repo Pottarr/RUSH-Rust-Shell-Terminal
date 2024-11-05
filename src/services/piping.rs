@@ -1,7 +1,4 @@
 use crate::Terminal;
-use std::io::Read;
-use std::{fs::File, io::Write};
-use std::path::Path;
 
 impl Terminal {
     pub fn piping_helper(&mut self, final_output: &mut String, all_contents: &Vec<(String, String)>) {

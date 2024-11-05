@@ -113,10 +113,16 @@ impl Terminal {
 
     // Main GUI components
     fn view(&self) -> Element<Message> {
+        let path_str;
+        if cfg!(target_os = "windows") {
+            path_str = format!("user@rush {}$", self.current_path.to_str().unwrap().replace(home_dir().unwrap().to_str().unwrap(), "~").replace("/", r"\"));
+        } else {
+            path_str = format!("user@rush {}$", self.current_path.to_str().unwrap().replace(home_dir().unwrap().to_str().unwrap(), "~"));
+        }
         column![
             row![text("Change theme:").size(20), pick_list(Theme::ALL, Some(&self.theme), Message::ChangeTheme)],
             row![
-                text(format!("user@rush {}$", self.current_path.to_str().unwrap().replace(home_dir().unwrap().to_str().unwrap(), "~"))).size(34).color(color!(0x00e03c)),
+                text(path_str).size(34).color(color!(0x00e03c)),
                 text_input("", &self.content).size(30)
                 .on_input(Message::Edit)
                 .on_submit(Message::Submit(self.content.clone()))

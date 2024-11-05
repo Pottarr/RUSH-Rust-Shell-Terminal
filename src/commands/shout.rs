@@ -1,7 +1,4 @@
 use crate::Terminal;
-use std::{fs::File, io::Write};
-use std::path::Path;
-use std::fs::OpenOptions;
 
 impl Terminal {
     pub fn shout(&mut self, final_output: &mut String) {

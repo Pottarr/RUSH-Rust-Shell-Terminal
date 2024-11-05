@@ -27,7 +27,17 @@ impl Terminal {
                     final_output.push_str("\nNot a directory");
                 } else {
                     self.current_path = dir_change_to.to_path_buf();
-                    final_output.push_str(format!("\nChange directory to {:?}", self.current_path.to_str().unwrap()).as_str());
+                    println!("{:?}", self.current_path);
+                    let final_path: String;
+                    if cfg!(target_os = "windows") {
+                        final_path = self.current_path.to_str().unwrap().replace(r"\\", r"\").replace("/", r"\");
+                        println!("{}", &final_path);
+                    } else {
+                        final_path= self.current_path.to_str().unwrap().to_string();
+                        println!("{}", &final_path);
+
+                    }
+                    final_output.push_str(format!("\nChange directory to {}", &final_path).as_str());
                 }
             } else {
                 final_output.push_str("\nNo such file or directory");
