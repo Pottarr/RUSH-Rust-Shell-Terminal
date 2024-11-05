@@ -61,5 +61,6 @@ impl Terminal {
                 }
             }
         }
+        self.output.push(final_output.to_string());
     }
 }

@@ -10,7 +10,6 @@ impl Terminal {
             1 => {
                 final_output.push('\n');
                 final_output.push_str("Error: No filename specified.");
-                self.output.push(final_output.to_string());
             }
             2 => {
                 let stupid_path = self.command[index_of_redirect+1].clone();
@@ -36,13 +35,21 @@ impl Terminal {
                     ">" => {
                         file = file_open.open(filepath).unwrap();
                         if let Err(e) = writeln!(file, "{contents}") {
-                            eprintln!("Couldn't write to file: {e}")
+                            final_output.push('\n');
+                            final_output.push_str(format!("Couldn't write to file: {e}").as_str());
+                        } else {
+                            final_output.push('\n');
+                            final_output.push_str(format!("Successfully redirect to: {}", filepath.to_str().unwrap()).as_str());
                         }
                     }
                     ">>" => {
                         file = file_open.append(true).open(filepath).unwrap();
                         if let Err(e) = writeln!(file, "{contents}") {
-                            eprintln!("Couldn't write to file: {e}")
+                            final_output.push('\n');
+                            final_output.push_str(format!("Couldn't write to file: {e}").as_str());
+                        } else {
+                            final_output.push('\n');
+                            final_output.push_str(format!("Successfully redirect to: {}", filepath.to_str().unwrap()).as_str());
                         }
                     }
                     _ => unreachable!()
@@ -51,8 +58,8 @@ impl Terminal {
             _ => {
                 final_output.push('\n');
                 final_output.push_str("Can only redirect to 1 file at a time.");
-                self.output.push(final_output.to_string());
             }
         }
+        self.output.push(final_output.to_string());
     }
 }
