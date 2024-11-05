@@ -53,5 +53,6 @@ impl Terminal {
                 self.output.push(final_output.to_string());
             }
         }
+        self.current_command_position = self.history.len()
     }
 }

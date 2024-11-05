@@ -1,8 +1,6 @@
-use home::home_dir;
-
 use crate::Terminal;
 
-use std::{fs, path::{PathBuf, Path}};
+use std::{fs, path::PathBuf};
 
 
 impl Terminal {
@@ -41,7 +39,7 @@ impl Terminal {
         } else { // else, print the output
             self.output.push(final_output.to_string());
         }
-
+        self.current_command_position = self.history.len()
     }
 
     fn get_file_name_as_string(&self, file_path_buf: PathBuf) -> String {

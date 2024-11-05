@@ -24,5 +24,6 @@ impl Terminal {
             final_output.push_str(format!("\nCreated {} directory", dir_count).as_str());
         }
         self.output.push(final_output.to_string());
+        self.current_command_position = self.history.len()
     }
 }
