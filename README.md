@@ -27,7 +27,7 @@ As a part of this curriculum, RUSH is intended to give students experience in bu
 1. **Clone the Repository**:
     ```bash
     git clone https://github.com/Pottarr/RUSH-Rust-Shell-Terminal.git
-    cd rush
+    cd RUSH-Rust-Shell-Terminal
     ```
 2. **Run**:
     ```bash
