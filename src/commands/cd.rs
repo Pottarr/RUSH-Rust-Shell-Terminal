@@ -2,6 +2,7 @@ use crate::Terminal;
 use std::path::{Path, PathBuf};
 
 impl Terminal {
+    // Change the current working directory
     pub fn cd(&mut self, final_output: &mut String) {
         if self.command.len() != 2 {
             final_output.push_str("\nInvalid amount of arguments");

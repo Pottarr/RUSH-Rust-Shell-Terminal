@@ -12,9 +12,9 @@ impl Terminal {
                 final_output.push_str("Error: No filename specified.");
             }
             2 => {
-                let stupid_path = self.command[index_of_redirect+1].clone();
-                let stupid_path_2 = format!("{}/{}", self.current_path.to_str().unwrap(), self.command[index_of_redirect+1].clone());
-                let mut filepath= Path::new(stupid_path.as_str());
+                let path = self.command[index_of_redirect+1].clone();
+                let path_2 = format!("{}/{}", self.current_path.to_str().unwrap(), self.command[index_of_redirect+1].clone());
+                let mut filepath= Path::new(path.as_str());
                 let mut file_open = & mut OpenOptions::new();
                 let mut file: File;
                 if filepath.has_root() {
@@ -24,7 +24,7 @@ impl Terminal {
                         file_open = file_open.write(true).create_new(true);
                     }
                 } else {
-                    filepath = Path::new(stupid_path_2.as_str());
+                    filepath = Path::new(path_2.as_str());
                     if filepath.exists() {
                         file_open = file_open.write(true);
                     } else {

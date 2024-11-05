@@ -1,22 +1,20 @@
+use home::home_dir;
+
 use crate::Terminal;
 
-use std::{fs, path::PathBuf};
+use std::{fs, path::{PathBuf, Path}};
 
 
 impl Terminal {
+    // List all files in the current directory
     pub fn ls(&mut self, final_output: &mut String) {
-
+        let mut contents = String::new();   // The output of the command as String
         final_output.push_str("\n");
-        // let mut line_vec = Vec::new();
-        let mut elements: Vec<String> = Vec::new();
-            
+        let mut elements: Vec<String> = Vec::new(); // vec for storing all file names
         if let Ok(entries) = fs::read_dir(self.current_path.as_os_str()) {
                 
-            // println!("{}", prefix);
             for entry in entries {
                 if let Ok(entry) = entry {
-
-
 
                     let path = entry.path();
 
@@ -29,16 +27,21 @@ impl Terminal {
 
         for (i, element) in elements.iter().enumerate() {
 
-
             final_output.push_str(&element);
+            contents.push_str(&element);
 
             if (i + 1) % 3 == 0 || i == elements.len() - 1 {
                 final_output.push_str("\n");
+                contents.push_str("\n");
             }
         }
+        // if the user also type the ">" or ">>", call the redirect function
+        if self.command.contains(&">".to_string()) || self.command.contains(&">>".to_string()) {
+            self.redirect_helper(final_output, contents);
+        } else { // else, print the output
+            self.output.push(final_output.to_string());
+        }
 
-
-        self.output.push(final_output.to_string());
     }
 
     fn get_file_name_as_string(&self, file_path_buf: PathBuf) -> String {
