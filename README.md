@@ -1,4 +1,4 @@
-![RUSH Logo](RUSH.png)
+![RUSH Logo](images/RUSH.png)
 
 # RUSH - Rust Shell Terminal
 
@@ -19,7 +19,7 @@ As a part of this curriculum, RUSH is intended to give students experience in bu
 
 **Note**: The history log file will be created in:
 
--   **Windows**: `OS_drive:\Users\username\.rush\rush.log`
+-   **Windows**: `OS_DRIVE:\Users\USERNAME\.rush\rush.log`
 -   **Linux/macOS**: `~/.rush/rush.log`
 
 ## Installation
@@ -31,10 +31,22 @@ As a part of this curriculum, RUSH is intended to give students experience in bu
     ```
 2. **Run**:
     ```bash
+    cargo build
     cargo run
     ```
 
 #### Disclaimer: RUSH is currently not open for external contributions.
+
+<hr>
+
+## Presentations
+
+[Documentation PDF](./docs/RUSH%20Document.pdf)
+
+[Presentation Slides](https://www.canva.com/design/DAGVhiWupX4/L_cscDEmChqqI4FdjnQ26Q/view?utm_content=DAGVhiWupX4&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+
+#### Demonstration Video
+![Demonstration Video QR Code](./images/RUSH%20Demonstration%20Video.png)
 
 <hr>
 
