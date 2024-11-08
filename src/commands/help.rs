@@ -89,6 +89,10 @@ impl Terminal {
                         final_output.push_str("Example: shout hello\n");
                         self.output.push(final_output.to_string());
                     }
+                    "exit" => {
+                        final_output.push('\n');
+                        final_output.push_str("exit: Exit the terminal\n");
+                    }
                     _ => {
                         final_output.push('\n');
                         final_output.push_str(format!("{}: Invalid command", self.command[1].as_str()).as_str());
